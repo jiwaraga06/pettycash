@@ -24,6 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('finance_approved_by')->nullable();
             $table->dateTime('tanggal_pencairan')->nullable();
             $table->date('tanggal_pengajuan')->nullable();
+            $table->string('note')->nullable();
             $table->timestamps();
 
             $table->foreign('created_by')->references('id')->on('users')->cascadeOnDelete();

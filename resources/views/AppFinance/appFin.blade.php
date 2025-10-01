@@ -69,25 +69,26 @@
                                         @if ($item->status == 'dept_approved')
                                             <a href="" data-id="{{ $item->id }}"
                                                 class="btn btn-sm btn-success btn-approve"><i class="fa fa-check">
-                                                    Approve</i></a>
+                                                    Terima</i></a>
                                             <form action="" method="POST" id="formApprove">
                                                 @csrf
                                             </form>
-                                            <a href=""data-id="{{ $item->id }}"
-                                                class="btn btn-sm btn-danger btn-reject"><i class="fa fa-pen">
-                                                    Reject</i></a>
-                                            <form action="" method="POST" id="formReject">
-                                                @csrf
-                                            </form>
+                                            <a href="" data-id="{{ $item->id }}" data-toggle="modal"
+                                                data-target="#modalNote/{{ $item->id }}"
+                                                class="btn btn-sm btn-danger btn-rejects"><i class="fa fa-times">
+                                                    Tolak</i></a>
+                                            </br>
                                         @endif
                                         <a href="#modalDetail/{{ $item->id }}" class="btn btn-sm btn-info "
                                             data-toggle="modal" data-target="#modalDetail/{{ $item->id }}"><i
                                                 class="fa fa-eye">
                                                 Detail</i></a>
-                                        <a href="#modalPencairan/{{ $item->id }}" class="btn btn-sm btn-info "
-                                            data-toggle="modal" data-target="#modalPencairan/{{ $item->id }}"><i
-                                                class="fa fa-money-from-bracket">
-                                            </i>Pencairan</a>
+                                        @if ($item->status == 'finance_approved')
+                                            <a href="#modalPencairan/{{ $item->id }}" class="btn btn-sm btn-info "
+                                                data-toggle="modal" data-target="#modalPencairan/{{ $item->id }}"><i
+                                                    class="fa fa-money-from-bracket">
+                                                </i>Pencairan</a>
+                                        @endif
 
                                     </td>
                                 </tr>
@@ -183,6 +184,36 @@
                             <button data-dismiss="modal" class="btn btn-info"><i class="fas fa-times"></i> Tutup</button>
                             <button type="submit" class="btn btn-success"><i class="fas fa-check"></i>
                                 Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+    @foreach ($pettycash as $a)
+        <div class="modal fade" id="modalNote/{{ $a->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header no-bd">
+                        <h5 class="modal-title">
+                            <span class="fw-largebold"> Alasan Menolak Permohonan</span>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form action="{{ route('rejectedFinance', ['id' => $a->id]) }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="">Catatan</label>
+                                <textarea type="text" class="form-control" id="note" name="note" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-info"><i class="fas fa-times"></i>Tutup</button>
+                            <button type="submit" class="btn btn-danger">Submit</button>
                         </div>
                     </form>
                 </div>

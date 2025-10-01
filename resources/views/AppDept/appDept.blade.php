@@ -70,16 +70,18 @@
                                         @if ($item->status == 'pending')
                                             <a href="" data-id="{{ $item->id }}"
                                                 class="btn btn-sm btn-success btn-approve"><i class="fa fa-check">
-                                                    Approve</i></a>
+                                                    Terima</i></a>
                                             <form action="" method="POST" id="formApprove">
                                                 @csrf
                                             </form>
-                                            <a href=""data-id="{{ $item->id }}"
-                                                class="btn btn-sm btn-danger btn-reject"><i class="fa fa-pen">
-                                                    Reject</i></a>
-                                            <form action="" method="POST" id="formReject">
+                                            <a href="" data-id="{{ $item->id }}" data-toggle="modal"
+                                                data-target="#modalNote/{{ $item->id }}"
+                                                class="btn btn-sm btn-danger btn-rejects"><i class="fa fa-times">
+                                                    Tolak</i></a>
+                                            </br>
+                                            {{-- <form action="" method="POST" id="formReject">
                                                 @csrf
-                                            </form>
+                                            </form> --}}
                                         @endif
                                         <a href="#modalDetail/{{ $item->id }}" class="btn btn-sm btn-info "
                                             data-toggle="modal" data-target="#modalDetail/{{ $item->id }}"><i
@@ -152,6 +154,36 @@
             </div>
         </div>
     @endforeach
+    @foreach ($pettycash as $a)
+        <div class="modal fade" id="modalNote/{{ $a->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header no-bd">
+                        <h5 class="modal-title">
+                            <span class="fw-largebold"> Alasan Menolak Permohonan</span>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form action="{{ route('rejectedDeptHead', ['id' => $a->id]) }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="">Catatan</label>
+                                <textarea type="text" class="form-control" id="note" name="note" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-info"><i class="fas fa-times"></i>Tutup</button>
+                            <button type="submit" class="btn btn-danger">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
     <script src="{{ asset('assets/js/core/jquery.3.2.1.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/datatables/datatables.min.js') }}"></script>
@@ -200,13 +232,12 @@
                 buttons: ["Tutup", "Setuju"],
                 dangerMode: true,
             }).then((willReject) => {
-                if (willReject) {
+                // if (willReject) {
 
-                    // submit form ke route delete
-                    var form = $('#formReject');
-                    form.attr('action', '/pettycash/rejectedDeptHead/' + id);
-                    form.submit();
-                }
+                //     var form = $('#formReject');
+                //     form.attr('action', '/pettycash/rejectedDeptHead/' + id);
+                //     form.submit();
+                // }
             });
         });
     </script>

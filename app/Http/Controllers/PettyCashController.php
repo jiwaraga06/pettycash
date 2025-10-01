@@ -172,12 +172,12 @@ class PettyCashController extends Controller
             ->with('success', 'Petty Cash berhasil disetujui');
     }
 
-    public function rejectedDeptHead($id)
+    public function rejectedDeptHead($id, Request $request)
     {
         $pettycash = PettyCash::findOrFail($id);
         $pettycash->update([
             "status" => "rejected",
-            "dept_approved_by" => Auth::user()->id,
+            "note" => $request->note,
         ]);
         return redirect()->route('show.showPettyCashDeptHead')
             ->with('success', 'Petty Cash berhasil ditolak');
@@ -203,11 +203,13 @@ class PettyCashController extends Controller
             ->with('success', 'Petty Cash berhasil disetujui');
     }
 
-    public function rejectedFinance($id)
+    public function rejectedFinance($id, Request $request)
     {
         $pettycash = PettyCash::findOrFail($id);
         $pettycash->update([
-            "status" => "rejected"
+            "status" => "rejected",
+            "note" => $request->note,
+
         ]);
         return redirect()->route('show.showPettyCashFinHead')
             ->with('success', 'Petty Cash berhasil ditolak');

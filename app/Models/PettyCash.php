@@ -21,7 +21,8 @@ class PettyCash extends Model
         'dept_approved_by',
         'finance_approved_by',
         'tanggal_pencairan',
-        'tanggal_pengajuan'
+        'tanggal_pengajuan',
+        'note',
     ];
 
     public function user()

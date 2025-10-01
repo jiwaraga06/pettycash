@@ -93,6 +93,10 @@
                                             <form action="" method="POST" id="formDelete">
                                                 @csrf
                                             </form>
+                                            </br>
+                                            <a href=""data-id="{{ $item->id }}" data-toggle="modal"
+                                                data-target="#modalNote/{{ $item->id }}" class="btn btn-sm btn-info ">
+                                                <i class="fa fa-eye"></i> Detail Penolkkan</a>
                                         @elseif ($item->status == 'paid')
                                             <a href="{{ route('show.showDetailPettyCash', ['id' => $item->id]) }}"
                                                 class="btn btn-sm btn-info ">
@@ -163,6 +167,36 @@
                         <button data-dismiss="modal" class="btn btn-info"><i class="fas fa-times"></i>Tutup</button>
 
                     </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+    @foreach ($pettycash as $a)
+        <div class="modal fade" id="modalNote/{{ $a->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header no-bd">
+                        <h5 class="modal-title">
+                            <span class="fw-largebold"> Alasan Penolakan</span>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form action="{{ route('rejectedDeptHead', ['id' => $a->id]) }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="">Catatan</label>
+                                <textarea type="text" class="form-control" id="note" name="note" rows="3" readonly >{{$a->note}} </textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-info"><i class="fas fa-times"></i>Tutup</button>
+
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
