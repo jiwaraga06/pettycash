@@ -220,12 +220,13 @@
                             <ul class="dropdown-menu dropdown-user animated fadeIn">
                                 <li>
                                     <div class="user-box">
-                                        <div class="avatar-lg"><img src="{{ asset('assets/img/profile.jpg') }}" alt="image profile"
-                                                class="avatar-img rounded"></div>
+                                        <div class="avatar-lg"><img src="{{ asset('assets/img/profile.jpg') }}"
+                                                alt="image profile" class="avatar-img rounded"></div>
                                         <div class="u-text">
                                             <h4>{{ Auth::user()->name }}</h4>
-                                            <p class="text-muted"> {{ Auth::user()->name }} </p><a href="profile.html"
-                                                class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                            <p class="text-muted"> {{ Auth::user()->name }} </p><a
+                                                href="profile.html" class="btn btn-rounded btn-danger btn-sm">View
+                                                Profile</a>
                                         </div>
                                     </div>
                                 </li>
@@ -276,18 +277,38 @@
                             </span>
                             <h4 class="text-section">Menu</h4>
                         </li>
-                        <li class="nav-item {{ request()->routeIs('show.showPettyCashUser') ? 'active' : '' }}">
-                            <a href="{{ route('show.showPettyCashUser') }}">
-                                <i class="fas fa-layer-group"></i>
-                                <p>Petty Cash</p>
-                            </a>
-                        </li>
+                        @if (Auth::user()->id_role == 4)
+                            <li class="nav-item {{ request()->routeIs('showAcount') ? 'active' : '' }}">
+                                <a href="{{ route('showAcount') }}">
+                                    <i class="fas fa-user"></i>
+                                    <p>Setting Account</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->routeIs('showRole') ? 'active' : '' }}">
+                                <a href="{{ route('showRole') }}">
+                                    <i class="fas fa-clipboard"></i>
+                                    <p>Role Permission</p>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::user()->id_role == 4 || Auth::user()->id_role == 1)
+                            <li class="nav-item {{ request()->routeIs('show.showPettyCashUser') ? 'active' : '' }}">
+                                <a href="{{ route('show.showPettyCashUser') }}">
+                                    <i class="fas fa-layer-group"></i>
+                                    <p>Petty Cash</p>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::user()->id_role == 2 || Auth::user()->id_role == 4)
                         <li class="nav-item {{ request()->routeIs('show.showPettyCashDeptHead') ? 'active' : '' }}">
                             <a href="{{ route('show.showPettyCashDeptHead') }}">
                                 <i class="fas fa-chalkboard-teacher"></i>
                                 <p>Approve Dept Head</p>
                             </a>
                         </li>
+                        @endif
+                        @if (Auth::user()->id_role == 3 || Auth::user()->id_role == 4)
+
                         <li class="nav-item {{ request()->routeIs('show.showPettyCashFinHead') ? 'active' : '' }}">
                             <a href="{{ route('show.showPettyCashFinHead') }}">
                                 <i class="fas fa-chalkboard-teacher"></i>
@@ -315,8 +336,7 @@
                                 </ul>
                             </div>
                         </li>
-
-
+                        @endif
 
                     </ul>
                 </div>

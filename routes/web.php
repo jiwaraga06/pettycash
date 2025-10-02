@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PettyCashController;
 use App\Http\Controllers\PettyCashDetailController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->controller(AuthController::class)->group(function () {
@@ -19,6 +21,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'dashboard')->name('dashboard');
         Route::post('/chartSummaryAmount', 'chartSummaryAmount')->name('chartSummaryAmount');
         // Route::get('/home', 'dashboard'); // Gunakan nama yang sama, atau kalau tidak perlu, hapus salah satunya
+    });
+    Route::prefix('account')->controller(AccountController::class)->group(function () {
+        Route::get('/', 'showAcount')->name('showAcount');
+        Route::post('/addAccount', 'addAccount')->name('addAccount');
+        Route::put('/editAccount/{id}', 'editAccount')->name('editAccount');
+        Route::delete('/{id}}', 'deleteAccount')->name('deleteAccount');
+    });
+    Route::prefix('role')->controller(RoleController::class)->group(function () {
+        Route::get('/', 'showRole')->name('showRole');
+        Route::post('/addRole', 'addRole')->name('addRole');
+        Route::put('/editRole/{id}', 'editRole')->name('editRole');
+        Route::delete('/{id}', 'deleteRole')->name('deleteRole');
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

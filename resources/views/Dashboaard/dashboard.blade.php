@@ -28,6 +28,8 @@
                 </div>
             </div>
 
+            @if (Auth::user()->id_role == 1 || Auth::user()->id_role == 4)
+
             <div class="col-md-3">
                 <div class="card card-stats card-info">
                     <div class="card-body">
@@ -47,6 +49,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <div class="col-md-3">
                 <div class="card card-stats card-success">
