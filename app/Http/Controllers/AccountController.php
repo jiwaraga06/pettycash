@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
 {
@@ -28,7 +29,12 @@ class AccountController extends Controller
             "password" => "required|string",
             "id_role" => "required",
         ]);
-        User::create($validate);
+        User::create([
+            "name" => $request->name,
+            "email" => $request->email,
+            "password" => Hash::make($request->password),
+            "id_role" => $request->id_role,
+        ]);
         return redirect()->route('showAcount')
             ->with('success', 'Account berhasil dibuat!');
     }
@@ -40,7 +46,7 @@ class AccountController extends Controller
         $user->email = $request->email;
         $user->id_role = $request->id_role;
         if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
+            $user->password = Hash::make($request->password);
         }
 
         $user->save();
