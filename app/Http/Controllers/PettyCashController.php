@@ -123,7 +123,7 @@ class PettyCashController extends Controller
             "description" => "required",
         ]);
         $amount = preg_replace('/[^0-9]/', '', $request->amount);
-        PettyCash::create([
+        $pettyCash = PettyCash::create([
             "kode_pettycash" => $request->kode_pettycash,
             "amount" => (int) $amount,
             "used_amount" => 0,
@@ -132,6 +132,19 @@ class PettyCashController extends Controller
             "created_by" => Auth::user()->id,
             "description" => $request->description,
         ]);
+        $details = [
+            'title'        => 'Pengajuan Petty Cash Baru',
+            'body'         => 'Ada pengajuan petty cash baru yang perlu ditinjau.',
+            'kode_pettycash' => $pettyCash->kode_pettycash,
+            'amount'       => $pettyCash->amount,
+            'tipe'         => $pettyCash->tipe,
+            'created_by'   => Auth::user()->name,
+        ];
+
+
+        Mail::to('atasan.dept@email.com')
+            ->send((new PettyCashEmail($details))
+                ->from(Auth::user()->email, Auth::user()->name));
         return redirect()->route('show.showPettyCashUser')
             ->with('success', 'Petty Cash berhasil dibuat');
     }

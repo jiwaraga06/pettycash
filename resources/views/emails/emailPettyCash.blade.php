@@ -1,4 +1,16 @@
-<h3>Halo, raga !</h3>
+  <h2>{{ $details['title'] ?? 'Halo!' }}</h2>
 
-<p>Selamat datang di <a href="https://www.malasngoding.com/kirim-email-dengan-laravel/">www.malasngoding.com</a></p>
-<p>Tutorial Laravel #35 : kirim email dengan laravel.</p>
+  <p>{{ $details['body'] ?? 'Ada pengajuan kas kecil baru.' }}</p>
+
+  <br>
+
+  <p>
+      <strong>Kode Petty Cash:</strong> {{ $details['kode_pettycash'] ?? '-' }} <br>
+      <strong>Jumlah:</strong> Rp {{ isset($details['amount']) ? number_format($details['amount'], 0, ',', '.') : '-' }}
+      <br>
+      <strong>Tipe:</strong> {{ $details['tipe'] ?? '-' }} <br>
+      <strong>Dibuat oleh:</strong> {{ $details['created_by'] ?? '-' }}
+  </p>
+
+  <br>
+  <p>Terima kasih,<br>
