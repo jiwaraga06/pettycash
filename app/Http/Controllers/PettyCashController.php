@@ -103,13 +103,13 @@ class PettyCashController extends Controller
 
     //
 
-    public function sendEmail()
+    public function sendEmail($mailTo)
     {
         $details = [
             'title' => 'Halo dari Laravel 11',
             'body' => 'Ini adalah email percobaan menggunakan Mailtrap'
         ];
-        Mail::to("testing@malasngoding.com")->send(new PettyCashEmail($details));
+        Mail::to($mailTo)->send(new PettyCashEmail($details))->from(Auth::user()->email);
 
         return "Email telah dikirim";
     }

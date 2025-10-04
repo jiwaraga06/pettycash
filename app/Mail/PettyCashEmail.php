@@ -23,7 +23,7 @@ class PettyCashEmail extends Mailable
     public function build()
     {
         return $this->from('dermawanraga066@gmail.com')
-            ->subject('Email Petty Cash')
+            ->subject('Request Petty Cash')
             ->view('emails.emailPettyCash')
             ->with('details', $this->details);
     }
