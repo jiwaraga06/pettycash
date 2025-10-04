@@ -58,6 +58,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/RekapRincian', 'showRekapRincian')->name('show.showRekapRincian');
         Route::get('/exportRekapPermohonan', 'exportRekapPermohonan')->name('exportRekapPermohonan');
         Route::get('/exportRekapRincian', 'exportRekapRincian')->name('exportRekapRincian');
+        // SEND EMAIL
+        Route::get('/sendEmail', 'sendEmail');
     });
 
     Route::prefix('detailPettyCash')->controller(PettyCashDetailController::class)->group(function () {

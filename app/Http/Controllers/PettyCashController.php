@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PettyCashEmail;
 use App\Models\PettyCash;
 use App\Models\PettyCashDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class PettyCashController extends Controller
 {
@@ -51,7 +53,7 @@ class PettyCashController extends Controller
         ]);
         return view('Rekap.RekapPermohonan', $data);
     }
- public function showRekapRincian(Request $request)
+    public function showRekapRincian(Request $request)
     {
         $tgl_awal = $request->tgl_awal;
         $tgl_akhir = $request->tgl_akhir;
@@ -83,7 +85,7 @@ class PettyCashController extends Controller
     }
     public function exportRekapRincian(Request $request)
     {
-         $tgl_awal = $request->tgl_awal;
+        $tgl_awal = $request->tgl_awal;
         $tgl_akhir = $request->tgl_akhir;
         $pettycash = collect();
         if ($request->filled('tgl_awal') && $request->filled('tgl_akhir')) {
@@ -100,6 +102,17 @@ class PettyCashController extends Controller
     }
 
     //
+
+    public function sendEmail()
+    {
+        $details = [
+            'title' => 'Halo dari Laravel 11',
+            'body' => 'Ini adalah email percobaan menggunakan Mailtrap'
+        ];
+        Mail::to("testing@malasngoding.com")->send(new PettyCashEmail($details));
+
+        return "Email telah dikirim";
+    }
 
     public function addRequest(Request $request)
     {
