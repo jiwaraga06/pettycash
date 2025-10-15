@@ -60,7 +60,6 @@
                                 <option value="">-- Pilih Tipe Permohonan --</option>
                                 <option value="Operasional">Operasional</option>
                                 <option value="Project">Project</option>
-                                <option value="Perjalanan">Perjalanan</option>
                             </select>
                         </div>
                         <div class="form-group">

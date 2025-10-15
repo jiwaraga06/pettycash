@@ -13,18 +13,25 @@ class PettyCashEmail extends Mailable
 {
     use Queueable, SerializesModels;
     public $details;
-    /**
-     * Create a new message instance.
-     */
-    public function __construct($details)
+    protected $subjectEmail;
+    protected $viewEmail;
+    protected $fromEmail;
+    protected $fromName;
+
+    public function __construct($details, $subjectEmail, $viewEmail, $fromEmail, $fromName = null)
     {
         $this->details = $details;
+        $this->subjectEmail = $subjectEmail;
+        $this->viewEmail = $viewEmail;
+        $this->fromEmail = $fromEmail;
+        $this->fromName = $fromName ?? $fromEmail;
     }
+
     public function build()
     {
-        return $this->from('dermawanraga066@gmail.com')
-            ->subject('Request Petty Cash')
-            ->view('emails.emailPettyCash')
+        return $this->from($this->fromEmail, $this->fromName)
+            ->subject($this->subjectEmail)
+            ->view($this->viewEmail)
             ->with('details', $this->details);
     }
     /**

@@ -275,7 +275,7 @@
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
                             </span>
-                            <h4 class="text-section">Menu</h4>
+                            <h4 class="text-section">Master</h4>
                         </li>
                         @if (Auth::user()->id_role == 4)
                             <li class="nav-item {{ request()->routeIs('showAcount') ? 'active' : '' }}">
@@ -291,6 +291,12 @@
                                 </a>
                             </li>
                         @endif
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Menu</h4>
+                        </li>
                         @if (Auth::user()->id_role == 4 || Auth::user()->id_role == 1)
                             <li class="nav-item {{ request()->routeIs('show.showPettyCashUser') ? 'active' : '' }}">
                                 <a href="{{ route('show.showPettyCashUser') }}">

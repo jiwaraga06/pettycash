@@ -17,7 +17,7 @@ class PettyCash extends Model
         'description',
         'tipe',
         'status',
-        'created_by',
+        'user_id',
         'dept_approved_by',
         'finance_approved_by',
         'tanggal_pencairan',

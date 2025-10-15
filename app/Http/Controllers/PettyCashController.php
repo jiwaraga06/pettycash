@@ -7,6 +7,7 @@ use App\Mail\PettyCashEmail;
 use App\Models\PettyCash;
 use App\Models\PettyCashDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -109,7 +110,6 @@ class PettyCashController extends Controller
             'title' => 'Halo dari Laravel 11',
             'body' => 'Ini adalah email percobaan menggunakan Mailtrap'
         ];
-        Mail::to($mailTo)->send(new PettyCashEmail($details))->from(Auth::user()->email);
 
         return "Email telah dikirim";
     }
@@ -129,22 +129,26 @@ class PettyCashController extends Controller
             "used_amount" => 0,
             "tipe" => $request->tipe,
             "status" => 'pending',
-            "created_by" => Auth::user()->id,
+            "user_id" => Auth::user()->id,
             "description" => $request->description,
         ]);
         $details = [
-            'title'        => 'Pengajuan Petty Cash Baru',
             'body'         => 'Ada pengajuan petty cash baru yang perlu ditinjau.',
             'kode_pettycash' => $pettyCash->kode_pettycash,
             'amount'       => $pettyCash->amount,
             'tipe'         => $pettyCash->tipe,
-            'created_by'   => Auth::user()->name,
+            'user_id'   => Auth::user()->name,
         ];
 
-
-        Mail::to('atasan.dept@email.com')
-            ->send((new PettyCashEmail($details))
-                ->from(Auth::user()->email, Auth::user()->name));
+        Mail::to('atasan.dept@email.com')->send(
+            new PettyCashEmail(
+                $details,
+                'Request Petty Cash - Approval Needed',
+                'emails.emailPettyCash',
+                Auth::user()->email,
+                Auth::user()->name
+            )
+        );
         return redirect()->route('show.showPettyCashUser')
             ->with('success', 'Petty Cash berhasil dibuat');
     }
@@ -164,9 +168,26 @@ class PettyCashController extends Controller
             "used_amount" => 0,
             "tipe" => $request->tipe,
             "status" => 'pending',
-            "created_by" => Auth::user()->id,
+            "user_id" => Auth::user()->id,
             "description" => $request->description,
         ]);
+        $details = [
+            'body'         => 'Ada pengajuan petty cash baru yang perlu ditinjau.',
+            'kode_pettycash' => $pettycash->kode_pettycash,
+            'amount'       => $pettycash->amount,
+            'tipe'         => $pettycash->tipe,
+            'user_id'   => Auth::user()->name,
+        ];
+
+        Mail::to('atasan.dept@email.com')->send(
+            new PettyCashEmail(
+                $details,
+                'Request Petty Cash - Approval Needed',
+                'emails.emailPettyCash',
+                Auth::user()->email,
+                Auth::user()->name
+            )
+        );
         return redirect()->route('show.showPettyCashUser')
             ->with('success', 'Petty Cash berhasil diperbarui!');
     }
@@ -179,6 +200,7 @@ class PettyCashController extends Controller
             ->with('success', 'Petty Cash berhasil dihapus!');
     }
     // DEPTHEAD
+    // finance_approved
     public function showPettyCashDeptHead()
     {
         $pettycash = PettyCash::with(['user'])->where('status', 'dept_approved')->orWhere('status', 'pending')->orWhere('status', 'rejected')->get();
@@ -190,10 +212,26 @@ class PettyCashController extends Controller
     public function approvedDeptHead($id)
     {
         $pettycash = PettyCash::findOrFail($id);
+        $pettycashUser =  PettyCash::with(['user'])->where('user_id', $pettycash->user_id)->first();
         $pettycash->update([
             "status" => "dept_approved",
             "dept_approved_by" => Auth::user()->id,
         ]);
+        $details = [
+            'nama'         => 'Finance',
+            'pengaju' => $pettycashUser->user->name,
+            'nominal'       => $pettycash->amount
+        ];
+
+        Mail::to('atasan.fin@email.com')->send(
+            new PettyCashEmail(
+                $details,
+                'Petty Cash Approved',
+                'emails.emailAtasan',
+                Auth::user()->email,
+                Auth::user()->name
+            )
+        );
         return redirect()->route('show.showPettyCashDeptHead')
             ->with('success', 'Petty Cash berhasil disetujui');
     }
@@ -221,10 +259,26 @@ class PettyCashController extends Controller
     public function approvedFinance($id)
     {
         $pettycash = PettyCash::findOrFail($id);
+        $pettycashUser =  PettyCash::with(['user'])->where('user_id', $pettycash->user_id)->first();
         $pettycash->update([
             "status" => "finance_approved",
             "finance_approved_by" => Auth::user()->id,
         ]);
+        $details = [
+            'nama'         => 'User',
+            'pengaju' => $pettycashUser->user->name,
+            'nominal'       => $pettycash->amount
+        ];
+
+        Mail::to('user@email.com')->send(
+            new PettyCashEmail(
+                $details,
+                'Petty Cash Approved',
+                'emails.emailFinance',
+                Auth::user()->email,
+                Auth::user()->name
+            )
+        );
         return redirect()->route('show.showPettyCashFinHead')
             ->with('success', 'Petty Cash berhasil disetujui');
     }
@@ -246,10 +300,41 @@ class PettyCashController extends Controller
             "tanggal_pencairan" => "required"
         ]);
         $pettycash = PettyCash::findOrFail($id);
+        $pettycashUser =  PettyCash::with(['user'])->where('user_id', $pettycash->user_id)->first();
+
+        $tanggalPencairan = Carbon::parse($request->tanggal_pencairan);
+        $tanggalHariIni = Carbon::today();
+        $status = 'paid';
+        if ($tanggalPencairan->equalTo($tanggalHariIni)) {
+            $status = 'paid';
+        } elseif ($tanggalPencairan->lessThan($tanggalHariIni)) {
+            $status = 'waiting paid';
+        } else {
+        // Kalau tanggal pencairan di masa depan, opsional bisa atur status lain
+        $status = 'waiting paid';
+    }
+
         $pettycash->update([
-            "tanggal_pencairan" => $request->tanggal_pencairan,
-            "status" => "paid"
+            'tanggal_pencairan' => $tanggalPencairan,
+            'status' => $status
         ]);
+
+        $details = [
+            'nama'         => 'User',
+            'pengaju' => $pettycashUser->user->name,
+            'nominal'       => $pettycash->amount,
+            'tanggal_pencairan'       => $request->tanggal_pencairan,
+        ];
+
+        Mail::to('user@email.com')->send(
+            new PettyCashEmail(
+                $details,
+                'Petty Cash Paid',
+                'emails.emailPencairan',
+                Auth::user()->email,
+                Auth::user()->name
+            )
+        );
         return redirect()->route('show.showPettyCashFinHead')
             ->with('success', 'Pencairan berhasil');
     }

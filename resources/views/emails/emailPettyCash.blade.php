@@ -1,12 +1,10 @@
-  <h2>{{ $details['title'] ?? 'Halo!' }}</h2>
-
   <p>{{ $details['body'] ?? 'Ada pengajuan kas kecil baru.' }}</p>
 
   <br>
 
   <p>
       <strong>Kode Petty Cash:</strong> {{ $details['kode_pettycash'] ?? '-' }} <br>
-      <strong>Jumlah:</strong> Rp {{ isset($details['amount']) ? number_format($details['amount'], 0, ',', '.') : '-' }}
+      <strong>Nominal:</strong> Rp {{ isset($details['amount']) ? number_format($details['amount'], 0, ',', '.') : '-' }}
       <br>
       <strong>Tipe:</strong> {{ $details['tipe'] ?? '-' }} <br>
       <strong>Dibuat oleh:</strong> {{ $details['created_by'] ?? '-' }}

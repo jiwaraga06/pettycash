@@ -42,6 +42,7 @@
                                 <th>Kode</th>
                                 <th>Saldo</th>
                                 <th>Saldo Terpakai</th>
+                                <th>Tanggal Pencairan</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -56,6 +57,7 @@
                                     <td> {{ $item->kode_pettycash }} </td>
                                     <td> Rp. {{ number_format($item->amount, 0, ',', '.') }}</td>
                                     <td> Rp. {{ number_format($item->used_amount, 0, ',', '.') }}</td>
+                                    <td> {{ $item->tanggal_pencairan }}</td>
                                     @if ($item->status == 'pending')
                                         <td> <span class="badge badge-info">PENDING</span> </td>
                                     @elseif ($item->status == 'dept_approved')
@@ -64,6 +66,8 @@
                                         <td> <span class="badge badge-info">Approve by Finance</span> </td>
                                     @elseif ($item->status == 'paid')
                                         <td> <span class="badge badge-primary">PAID</span> </td>
+                                    @elseif ($item->status == 'waiting paid')
+                                        <td> <span class="badge badge-primary">WAITING PAID</span> </td>
                                     @elseif ($item->status == 'rejected')
                                         <td> <span class="badge badge-danger">REJECTED</span> </td>
                                     @endif
@@ -96,7 +100,7 @@
                                             </br>
                                             <a href=""data-id="{{ $item->id }}" data-toggle="modal"
                                                 data-target="#modalNote/{{ $item->id }}" class="btn btn-sm btn-info ">
-                                                <i class="fa fa-eye"></i> Detail Penolkkan</a>
+                                                <i class="fa fa-eye"></i> Detail Penolakan</a>
                                         @elseif ($item->status == 'paid')
                                             <a href="{{ route('show.showDetailPettyCash', ['id' => $item->id]) }}"
                                                 class="btn btn-sm btn-info ">
